@@ -1,19 +1,27 @@
-import os
-import sys
 import config
 from discord.ext.commands import Bot as botBase
-from discord import Embed, File
+from discord import Embed
 from datetime import datetime
 
+COGS = ["parser", "clgen"]
 
 class Bot(botBase):
     def __init__(self):
         self.ready = False
         super().__init__(command_prefix=config.BOT_PREFIX)
 
+    def setup(self):
+      print(COGS)
+      for cog in COGS:
+        self.load_extension(f"src.cogs.{cog}")
+        print(f" {cog} cog loaded")
+
     def run(self):
-        print("running bot...")
-        super().run(config.TOKEN, reconnect=True)
+      print("running setup...")
+      self.setup()
+      
+      print("running bot...")
+      super().run(config.TOKEN, reconnect=True)
 
     async def on_connect(self):
         print("bot connected")
@@ -26,7 +34,7 @@ class Bot(botBase):
             self.ready = True
             print("bot ready")
             channel = self.get_channel(838093348732534788)
-            embed = Embed(title="Now Online!", description="iUdex is now online.",
+            embed = Embed(title="Now Online!", description="lumos is now online.",
                           colour=0xFF0000, timestamp=datetime.utcnow())
             fields = [("Name", "Value", True),
                       ("Another field", "This field is next to the other one.", True),
